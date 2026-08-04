@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interactive Animated CV - Phase 3</title>
+  <title>Dala Erick - Portfolio</title>
   <style>
     /* --- RESET & VARIABLES --- */
     * {
@@ -27,7 +27,7 @@
       overflow: hidden;
       height: 100vh;
       width: 100vw;
-      perspective: 1200px; /* Enables 3D camera depth */
+      perspective: 1200px;
     }
 
     /* --- BACKGROUND SLIDER & ZOOM ANIMATIONS --- */
@@ -52,14 +52,12 @@
       will-change: transform, opacity;
     }
 
-    /* Active State */
     .bg-slide.active {
       opacity: 0.45;
       transform: scale(1) translateZ(0);
       animation: zoomInFromDepth 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    /* Exiting State: Zoom Towards Screen */
     .bg-slide.exit {
       animation: zoomOutToScreen 1.1s cubic-bezier(0.7, 0, 0.84, 0) forwards;
     }
@@ -82,11 +80,10 @@
       }
       100% {
         opacity: 0;
-        transform: scale(1.4) translateZ(200px); /* Zooms past camera */
+        transform: scale(1.4) translateZ(200px);
       }
     }
 
-    /* Dark vignette overlay */
     .overlay {
       position: absolute;
       inset: 0;
@@ -95,17 +92,18 @@
       pointer-events: none;
     }
 
-    /* --- NAVIGATION BAR --- */
+    /* --- RESPONSIVE HEADER --- */
     header {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      padding: 2.5rem 4rem;
+      padding: 2rem 4rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 10;
+      gap: 1rem;
     }
 
     .brand {
@@ -119,6 +117,7 @@
       font-size: 1.4rem;
       font-weight: 700;
       letter-spacing: 2px;
+      white-space: nowrap;
     }
 
     .brand-tag {
@@ -133,7 +132,7 @@
 
     nav {
       display: flex;
-      gap: 2.5rem;
+      gap: 2rem;
     }
 
     nav a {
@@ -161,7 +160,7 @@
       background: var(--accent-orange);
     }
 
-    /* --- HERO CONTENT AREA & TEXT MASK ANIMATIONS --- */
+    /* --- HERO CONTENT AREA --- */
     main {
       position: relative;
       z-index: 5;
@@ -181,7 +180,6 @@
       display: flex;
     }
 
-    /* Text reveal wrapper using clip-path */
     .text-mask {
       overflow: hidden;
       display: block;
@@ -204,14 +202,14 @@
     .main-title-container {
       display: flex;
       align-items: flex-end;
-      gap: 2rem;
+      gap: 1.5rem;
       flex-wrap: wrap;
     }
 
     .main-title {
       font-family: var(--font-serif);
-      font-size: clamp(3.5rem, 8vw, 7.5rem);
-      line-height: 0.92;
+      font-size: clamp(2.8rem, 7vw, 7.5rem);
+      line-height: 0.95;
       text-transform: uppercase;
       font-weight: 400;
       letter-spacing: -1px;
@@ -239,38 +237,28 @@
       animation: fadeIn 0.8s ease-out 0.6s forwards;
     }
 
-    /* KEYFRAMES FOR TEXT */
+    /* KEYFRAMES */
     @keyframes slideUp {
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
+      to { transform: translateY(0); opacity: 1; }
     }
-
     @keyframes slideUpZoom {
-      to {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-      }
+      to { transform: translateY(0) scale(1); opacity: 1; }
     }
-
     @keyframes fadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* --- FOOTER & ACTION BUTTONS --- */
     .corner-info {
       position: absolute;
-      bottom: 3rem;
+      bottom: 2.5rem;
       left: 4rem;
       z-index: 10;
       font-size: 0.75rem;
       color: var(--text-muted);
       line-height: 1.6;
       letter-spacing: 1px;
+      max-width: 50vw;
     }
 
     .corner-info strong {
@@ -281,11 +269,11 @@
 
     .next-btn {
       position: absolute;
-      bottom: 3rem;
+      bottom: 2.5rem;
       right: 4rem;
       z-index: 10;
-      width: 55px;
-      height: 55px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       background: var(--accent-orange);
       border: none;
@@ -307,6 +295,55 @@
       height: 20px;
       fill: #000;
     }
+
+    /* --- MOBILE RESPONSIVE MEDIA QUERIES --- */
+    @media (max-width: 768px) {
+      header {
+        padding: 1.5rem 1.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+      }
+
+      .brand-tag {
+        display: none; /* Hide subtitle tag on small screens to save room */
+      }
+
+      nav {
+        width: 100%;
+        justify-content: space-between;
+        gap: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 0.8rem;
+      }
+
+      nav a {
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+      }
+
+      main {
+        padding: 0 1.5rem;
+      }
+
+      .main-title-container {
+        gap: 0.8rem;
+      }
+
+      .corner-info {
+        left: 1.5rem;
+        bottom: 1.5rem;
+        font-size: 0.65rem;
+        max-width: 60vw;
+      }
+
+      .next-btn {
+        right: 1.5rem;
+        bottom: 1.5rem;
+        width: 45px;
+        height: 45px;
+      }
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
@@ -321,10 +358,10 @@
   
   <div class="overlay"></div>
 
-  <!-- Header -->
+  <!-- Responsive Header -->
   <header>
     <div class="brand">
-      <div class="logo">ALEX / DEV</div>
+      <div class="logo">DALA ERICK</div>
       <div class="brand-tag">FULL-STACK ENGINEER & CREATIVE DEVELOPER</div>
     </div>
     <nav>
@@ -398,13 +435,13 @@
     const contents = document.querySelectorAll('.section-content');
     const navLinks = document.querySelectorAll('.nav-link');
 
-    // Initialize Auto-play on load
+    // Auto-play timer
     startAutoSlide();
 
     function startAutoSlide() {
       autoSlideTimer = setInterval(() => {
         nextSlide();
-      }, 5000); // 5 Seconds Interval
+      }, 5000);
     }
 
     function resetAutoSlide() {
@@ -425,19 +462,17 @@
       navLinks[currentIndex].classList.remove('active');
       navLinks[nextIndex].classList.add('active');
 
-      // Trigger exit zoom animation on current image
+      // Exit current slide towards screen
       currentSlide.classList.remove('active');
       currentSlide.classList.add('exit');
 
-      // Hide active content instantly
       currentContent.classList.remove('active');
 
-      // Prepare & animate next slide
+      // Enter next slide
       nextSlideEl.classList.remove('exit');
       nextSlideEl.classList.add('active');
       nextContent.classList.add('active');
 
-      // Cleanup exit classes after animation finishes
       setTimeout(() => {
         currentSlide.classList.remove('exit');
         currentIndex = nextIndex;
@@ -465,24 +500,50 @@
       resetAutoSlide();
     }
 
-    /* --- HORIZONTAL SCROLL INTERCEPTION --- */
+    /* --- MOUSE WHEEL SCROLL --- */
     let lastScrollTime = 0;
-
     window.addEventListener('wheel', (e) => {
       const now = Date.now();
-      // Debounce scroll events (minimum 600ms threshold)
       if (now - lastScrollTime < 600 || isAnimating) return;
 
       if (e.deltaY > 0) {
-        // Scroll Down -> Advance forward (Right to Left transition)
         nextSlide();
         resetAutoSlide();
         lastScrollTime = now;
       } else if (e.deltaY < 0) {
-        // Scroll Up -> Move backward
         prevSlide();
         resetAutoSlide();
         lastScrollTime = now;
+      }
+    }, { passive: true });
+
+    /* --- TOUCH & SWIPE EVENTS FOR MOBILE --- */
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    window.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+      let touchEndX = e.changedTouches[0].screenX;
+      let touchEndY = e.changedTouches[0].screenY;
+
+      let deltaX = touchEndX - touchStartX;
+      let deltaY = touchEndY - touchStartY;
+
+      // Ensure horizontal swipe is dominant over vertical scrolling
+      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 40) {
+        if (deltaX < 0) {
+          // Swipe Left -> Next slide
+          nextSlide();
+          resetAutoSlide();
+        } else {
+          // Swipe Right -> Previous slide
+          prevSlide();
+          resetAutoSlide();
+        }
       }
     }, { passive: true });
   </script>
