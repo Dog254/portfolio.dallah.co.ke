@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Animated CV - Phase 3</title>
+  <style>
+    /* --- RESET & VARIABLES --- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --accent-orange: #d97736;
+      --text-white: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.6);
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: #070707;
+      color: var(--text-white);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      perspective: 1200px; /* Enables 3D camera depth */
+    }
+
+    /* --- BACKGROUND SLIDER & ZOOM ANIMATIONS --- */
+    .bg-slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      transform-style: preserve-3d;
+    }
+
+    .bg-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.85) translateZ(-100px);
+      will-change: transform, opacity;
+    }
+
+    /* Active State */
+    .bg-slide.active {
+      opacity: 0.45;
+      transform: scale(1) translateZ(0);
+      animation: zoomInFromDepth 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Exiting State: Zoom Towards Screen */
+    .bg-slide.exit {
+      animation: zoomOutToScreen 1.1s cubic-bezier(0.7, 0, 0.84, 0) forwards;
+    }
+
+    @keyframes zoomInFromDepth {
+      0% {
+        opacity: 0;
+        transform: scale(0.85) translateZ(-150px);
+      }
+      100% {
+        opacity: 0.45;
+        transform: scale(1) translateZ(0);
+      }
+    }
+
+    @keyframes zoomOutToScreen {
+      0% {
+        opacity: 0.45;
+        transform: scale(1) translateZ(0);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.4) translateZ(200px); /* Zooms past camera */
+      }
+    }
+
+    /* Dark vignette overlay */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* --- NAVIGATION BAR --- */
+    header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 2.5rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .logo {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .brand-tag {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      max-width: 180px;
+      line-height: 1.3;
+      border-left: 1px solid rgba(255,255,255,0.25);
+      padding-left: 1rem;
+      letter-spacing: 1px;
+    }
+
+    nav {
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    nav a.active, nav a:hover {
+      color: var(--text-white);
+    }
+
+    nav a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--accent-orange);
+    }
+
+    /* --- HERO CONTENT AREA & TEXT MASK ANIMATIONS --- */
+    main {
+      position: relative;
+      z-index: 5;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 10vw;
+    }
+
+    .section-content {
+      display: none;
+      flex-direction: column;
+    }
+
+    .section-content.active {
+      display: flex;
+    }
+
+    /* Text reveal wrapper using clip-path */
+    .text-mask {
+      overflow: hidden;
+      display: block;
+    }
+
+    .subtitle {
+      font-size: 0.8rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+      transform: translateY(100%);
+      opacity: 0;
+    }
+
+    .section-content.active .subtitle {
+      animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+    }
+
+    .main-title-container {
+      display: flex;
+      align-items: flex-end;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .main-title {
+      font-family: var(--font-serif);
+      font-size: clamp(3.5rem, 8vw, 7.5rem);
+      line-height: 0.92;
+      text-transform: uppercase;
+      font-weight: 400;
+      letter-spacing: -1px;
+      transform: translateY(100%) scale(0.95);
+      opacity: 0;
+    }
+
+    .section-content.active .main-title {
+      animation: slideUpZoom 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+    }
+
+    .badge {
+      color: var(--accent-orange);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: lowercase;
+      border-bottom: 1px solid var(--accent-orange);
+      padding-bottom: 2px;
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .section-content.active .badge {
+      animation: fadeIn 0.8s ease-out 0.6s forwards;
+    }
+
+    /* KEYFRAMES FOR TEXT */
+    @keyframes slideUp {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUpZoom {
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* --- FOOTER & ACTION BUTTONS --- */
+    .corner-info {
+      position: absolute;
+      bottom: 3rem;
+      left: 4rem;
+      z-index: 10;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      letter-spacing: 1px;
+    }
+
+    .corner-info strong {
+      color: var(--text-white);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .next-btn {
+      position: absolute;
+      bottom: 3rem;
+      right: 4rem;
+      z-index: 10;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: var(--accent-orange);
+      border: none;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(217, 119, 54, 0.3);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .next-btn:hover {
+      transform: scale(1.15) rotate(5deg);
+    }
+
+    .next-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: #000;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Background Image Slides -->
+  <div class="bg-slider">
+    <div class="bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&q=80');"></div>
+  </div>
+  
+  <div class="overlay"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="logo">ALEX / DEV</div>
+      <div class="brand-tag">FULL-STACK ENGINEER & CREATIVE DEVELOPER</div>
+    </div>
+    <nav>
+      <a class="nav-link active" onclick="handleNavClick(0)">Home</a>
+      <a class="nav-link" onclick="handleNavClick(1)">Experience</a>
+      <a class="nav-link" onclick="handleNavClick(2)">About</a>
+    </nav>
+  </header>
+
+  <!-- Content Slides -->
+  <main>
+    <!-- Slide 1: Intro -->
+    <div class="section-content active">
+      <div class="text-mask">
+        <p class="subtitle">CREATIVE VISION</p>
+      </div>
+      <div class="main-title-container">
+        <div class="text-mask">
+          <h1 class="main-title">THE ART<br>OF CODE</h1>
+        </div>
+        <span class="badge">digital experiences</span>
+      </div>
+    </div>
+
+    <!-- Slide 2: Experience -->
+    <div class="section-content">
+      <div class="text-mask">
+        <p class="subtitle">PROJECTS & WORK</p>
+      </div>
+      <div class="main-title-container">
+        <div class="text-mask">
+          <h1 class="main-title">BUILDING<br>SYSTEMS</h1>
+        </div>
+        <span class="badge">full-stack mastery</span>
+      </div>
+    </div>
+
+    <!-- Slide 3: About -->
+    <div class="section-content">
+      <div class="text-mask">
+        <p class="subtitle">BACKGROUND</p>
+      </div>
+      <div class="main-title-container">
+        <div class="text-mask">
+          <h1 class="main-title">A WALK IN<br>DESIGN</h1>
+        </div>
+        <span class="badge">problem solver</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Corner Details -->
+  <div class="corner-info">
+    <strong>AVAILABLE FOR FREELANCE & FULL-TIME</strong>
+    NEW YORK, NY / REMOTE WORLDWIDE
+  </div>
+
+  <!-- Animated Circular Arrow Button -->
+  <button class="next-btn" onclick="handleNextClick()" aria-label="Next Slide">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+    </svg>
+  </button>
+
+  <script>
+    let currentIndex = 0;
+    let isAnimating = false;
+    let autoSlideTimer = null;
+
+    const slides = document.querySelectorAll('.bg-slide');
+    const contents = document.querySelectorAll('.section-content');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    // Initialize Auto-play on load
+    startAutoSlide();
+
+    function startAutoSlide() {
+      autoSlideTimer = setInterval(() => {
+        nextSlide();
+      }, 5000); // 5 Seconds Interval
+    }
+
+    function resetAutoSlide() {
+      clearInterval(autoSlideTimer);
+      startAutoSlide();
+    }
+
+    function switchSlide(nextIndex) {
+      if (isAnimating || nextIndex === currentIndex) return;
+      isAnimating = true;
+
+      const currentSlide = slides[currentIndex];
+      const currentContent = contents[currentIndex];
+      const nextSlideEl = slides[nextIndex];
+      const nextContent = contents[nextIndex];
+
+      // Update Nav active indicator
+      navLinks[currentIndex].classList.remove('active');
+      navLinks[nextIndex].classList.add('active');
+
+      // Trigger exit zoom animation on current image
+      currentSlide.classList.remove('active');
+      currentSlide.classList.add('exit');
+
+      // Hide active content instantly
+      currentContent.classList.remove('active');
+
+      // Prepare & animate next slide
+      nextSlideEl.classList.remove('exit');
+      nextSlideEl.classList.add('active');
+      nextContent.classList.add('active');
+
+      // Cleanup exit classes after animation finishes
+      setTimeout(() => {
+        currentSlide.classList.remove('exit');
+        currentIndex = nextIndex;
+        isAnimating = false;
+      }, 1100);
+    }
+
+    function nextSlide() {
+      let next = (currentIndex + 1) % slides.length;
+      switchSlide(next);
+    }
+
+    function prevSlide() {
+      let prev = (currentIndex - 1 + slides.length) % slides.length;
+      switchSlide(prev);
+    }
+
+    function handleNavClick(index) {
+      switchSlide(index);
+      resetAutoSlide();
+    }
+
+    function handleNextClick() {
+      nextSlide();
+      resetAutoSlide();
+    }
+
+    /* --- HORIZONTAL SCROLL INTERCEPTION --- */
+    let lastScrollTime = 0;
+
+    window.addEventListener('wheel', (e) => {
+      const now = Date.now();
+      // Debounce scroll events (minimum 600ms threshold)
+      if (now - lastScrollTime < 600 || isAnimating) return;
+
+      if (e.deltaY > 0) {
+        // Scroll Down -> Advance forward (Right to Left transition)
+        nextSlide();
+        resetAutoSlide();
+        lastScrollTime = now;
+      } else if (e.deltaY < 0) {
+        // Scroll Up -> Move backward
+        prevSlide();
+        resetAutoSlide();
+        lastScrollTime = now;
+      }
+    }, { passive: true });
+  </script>
+</body>
+</html>
