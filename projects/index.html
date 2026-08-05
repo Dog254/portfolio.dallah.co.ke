@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dallah Erick — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --bg: #1a1a1f;
+      --surface: #222228;
+      --border: rgba(255,255,255,0.08);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.5);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body { font-family: var(--font-sans); background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+    .bg-fixed {
+      position: fixed;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.07;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    header, .page-header, .filters, .projects-list, .page-nav { position: relative; z-index: 1; }
+
+    /* NAV */
+    header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 2.5rem 4rem;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(26,26,31,0.97) 0%, transparent 100%);
+    }
+
+    .brand { display: flex; align-items: center; gap: 1.2rem; }
+    .logo { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 700; letter-spacing: 2px; text-decoration: none; color: var(--text); }
+    .brand-tag { font-size: 0.7rem; color: var(--muted); max-width: 180px; line-height: 1.3; border-left: 1px solid rgba(255,255,255,0.25); padding-left: 1rem; letter-spacing: 1px; }
+
+    nav { display: flex; gap: 2.5rem; }
+    nav a { color: var(--muted); text-decoration: none; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; position: relative; }
+    nav a:hover { color: var(--text); }
+    nav a.active { color: var(--text); }
+    nav a.active::after { content: ''; position: absolute; bottom: -6px; left: 0; width: 100%; height: 2px; background: #fff; }
+
+    /* HAMBURGER */
+    .hamburger {
+      display: none; flex-direction: column; justify-content: center; gap: 5px;
+      width: 40px; height: 40px; cursor: pointer;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px; z-index: 200;
+    }
+    .hamburger span { display: block; height: 1.5px; background: #fff; border-radius: 2px; transition: all 0.35s cubic-bezier(0.16,1,0.3,1); transform-origin: center; }
+    .hamburger span:nth-child(2) { width: 60%; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none; position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(26,26,31,0.97); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 2rem 2rem; z-index: 150;
+      flex-direction: column; gap: 0;
+      transform: translateY(-100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+    .mobile-menu.open { transform: translateY(0); }
+    .mobile-menu a { color: var(--muted); text-decoration: none; font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; padding: 1.1rem 0; border-bottom: 1px solid var(--border); transition: color 0.3s; display: flex; justify-content: space-between; align-items: center; }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover, .mobile-menu a.active { color: #fff; }
+    .mobile-menu a::after { content: '↗'; font-size: 0.7rem; opacity: 0.4; }
+
+    /* PAGE */
+    .page-header {
+      padding: 12rem 4rem 4rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .page-header .subtitle { font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+
+    .page-header h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 400;
+      line-height: 0.95;
+      text-transform: uppercase;
+    }
+
+    .page-header h1 em { font-style: italic; color: var(--muted); }
+
+    .project-count { font-size: 0.75rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
+
+    /* FILTER TABS */
+    .filters {
+      padding: 2rem 4rem;
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .filter-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.5rem 1.2rem;
+      border-radius: 100px;
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: all 0.25s;
+    }
+
+    .filter-btn:hover, .filter-btn.active { background: #fff; color: #000; border-color: #fff; }
+
+    /* PROJECT LIST */
+    .projects-list { padding: 0 4rem 6rem; }
+
+    .project-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 220px 120px;
+      align-items: center;
+      gap: 2rem;
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .project-row:hover { background: rgba(255,255,255,0.02); }
+    .project-row:hover .project-arrow { opacity: 1; transform: translateX(0); }
+    .project-row:hover .project-thumb { opacity: 0.7; }
+
+    .project-index { font-size: 0.7rem; letter-spacing: 2px; color: var(--muted); }
+
+    .project-info { display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .project-name {
+      font-family: var(--font-serif);
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 400;
+      transition: color 0.3s;
+    }
+
+    .project-row:hover .project-name { color: #fff; }
+
+    .project-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; max-width: 500px; }
+
+    .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .tag {
+      font-size: 0.62rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.7rem;
+      border-radius: 100px;
+    }
+
+    .project-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border-radius: 8px;
+      opacity: 0.4;
+      transition: opacity 0.3s;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .project-arrow {
+      font-size: 1.2rem;
+      color: var(--muted);
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: all 0.3s;
+      justify-self: end;
+    }
+
+    /* PAGE NAV */
+    .page-nav {
+      position: fixed; bottom: 3rem; right: 4rem;
+      display: flex; gap: 1rem; z-index: 100;
+    }
+
+    .nav-btn {
+      width: 50px; height: 50px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: transparent; color: var(--text);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.3s; text-decoration: none;
+    }
+
+    .nav-btn:hover { background: rgba(255,255,255,0.08); }
+    .nav-btn.next { background: #fff; border-color: #fff; color: #000; }
+    .nav-btn.next:hover { transform: scale(1.1); }
+    .nav-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+    @media (max-width: 768px) {
+      header { padding: 1.2rem 1.5rem; }
+      .brand { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+      .brand-tag { display: block; border-left: none; padding-left: 0; font-size: 0.6rem; }
+      nav { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+      .page-header { padding: 9rem 1.5rem 3rem; }
+      .filters { padding: 1.5rem; }
+      .projects-list { padding: 0 1.5rem 6rem; }
+      .project-row { grid-template-columns: 40px 1fr; gap: 1rem; }
+      .project-thumb, .project-arrow { display: none; }
+      .project-tags { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-fixed"></div>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <button onclick="toggleMenu()" style="align-self:flex-end;background:none;border:1px solid var(--border);color:#fff;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;margin-bottom:1rem;">✕</button>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/experience">Experience</a>
+    <a href="/projects" class="active">Projects</a>
+    <a href="/skills">Skills</a>
+    <a href="/contact">Contact</a>
+  </div>
+
+  <header>
+    <div class="brand">
+      <a href="/" class="logo">DALLAH / DEV</a>
+      <div class="brand-tag">SYSTEM ARCHITECTURE & CLOUD INFRASTRUCTURE</div>
+    </div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/experience">Experience</a>
+      <a href="/projects" class="active">Projects</a>
+      <a href="/skills">Skills</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <a href="/dallah-erick-cv.pdf" download class="cv-btn">Download CV</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <div class="page-header">
+    <div>
+      <p class="subtitle">Selected Work</p>
+      <h1>PROJECTS &<br><em>Case Studies</em></h1>
+    </div>
+    <div class="project-count">4 Projects</div>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">Cloud</button>
+    <button class="filter-btn">Full-Stack</button>
+    <button class="filter-btn">Mobile</button>
+    <button class="filter-btn">AI</button>
+  </div>
+
+  <div class="projects-list">
+
+    <a class="project-row" href="https://nexuss-1hsa.onrender.com/" target="_blank">
+      <div class="project-index">01</div>
+      <div class="project-info">
+        <div class="project-name">NexusFlow</div>
+        <div class="project-desc">A full-stack platform built with React and Node.js, deployed on AWS with automated CI/CD pipelines and serverless functions for scalable performance.</div>
+        <div class="project-tags">
+          <span class="tag">React</span>
+          <span class="tag">Node.js</span>
+          <span class="tag">AWS</span>
+          <span class="tag">Full-Stack</span>
+        </div>
+      </div>
+      <div class="project-thumb" style="background-image:url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="project-arrow">↗</div>
+    </a>
+
+    <a class="project-row" href="https://flavorfind-fp0l.onrender.com/" target="_blank">
+      <div class="project-index">02</div>
+      <div class="project-info">
+        <div class="project-name">FlavorFind</div>
+        <div class="project-desc">AI-powered mobile app built with React Native integrating Spoonacular and OpenAI APIs for personalised recipe generation. Reduced food waste by 20%.</div>
+        <div class="project-tags">
+          <span class="tag">React Native</span>
+          <span class="tag">OpenAI</span>
+          <span class="tag">Mobile</span>
+          <span class="tag">AI</span>
+        </div>
+      </div>
+      <div class="project-thumb" style="background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="project-arrow">↗</div>
+    </a>
+
+    <a class="project-row" href="https://bluetechnology-com.onrender.com/" target="_blank">
+      <div class="project-index">03</div>
+      <div class="project-info">
+        <div class="project-name">BlueTechnology</div>
+        <div class="project-desc">Serverless e-commerce platform on AWS Lambda and API Gateway with a React frontend. CI/CD automation reduced release times by 30%.</div>
+        <div class="project-tags">
+          <span class="tag">AWS Lambda</span>
+          <span class="tag">React</span>
+          <span class="tag">Serverless</span>
+          <span class="tag">Cloud</span>
+        </div>
+      </div>
+      <div class="project-thumb" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="project-arrow">↗</div>
+    </a>
+
+    <a class="project-row" href="https://DALLAHerick-vh3m.onrender.com/" target="_blank">
+      <div class="project-index">04</div>
+      <div class="project-info">
+        <div class="project-name">Personal Portfolio</div>
+        <div class="project-desc">Previous personal portfolio showcasing projects, skills and experience. Built with a focus on performance and clean design.</div>
+        <div class="project-tags">
+          <span class="tag">HTML</span>
+          <span class="tag">CSS</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">Full-Stack</span>
+        </div>
+      </div>
+      <div class="project-thumb" style="background-image:url('https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=600&q=80')"></div>
+      <div class="project-arrow">↗</div>
+    </a>
+
+  </div>
+
+  <div class="page-nav">
+    <a href="/experience" class="nav-btn" aria-label="Previous">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
+    <a href="/skills" class="nav-btn next" aria-label="Next">
+      <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+    </a>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    // Filter tabs (visual only for now)
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

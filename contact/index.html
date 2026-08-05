@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dallah Erick — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --bg: #1a1a1f;
+      --surface: #222228;
+      --border: rgba(255,255,255,0.08);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.5);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-sans); background: var(--bg); color: var(--text); overflow-x: hidden; min-height: 100vh; }
+
+    .bg-fixed {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url('https://images.unsplash.com/photo-1596524430615-b46475ddff6e?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover; background-position: center; opacity: 0.05;
+    }
+
+    header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 2.5rem 4rem;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(26,26,31,0.97) 0%, transparent 100%);
+    }
+    .brand { display: flex; align-items: center; gap: 1.2rem; }
+    .logo { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 700; letter-spacing: 2px; text-decoration: none; color: var(--text); }
+    .brand-tag { font-size: 0.7rem; color: var(--muted); max-width: 180px; line-height: 1.3; border-left: 1px solid rgba(255,255,255,0.25); padding-left: 1rem; letter-spacing: 1px; }
+    nav { display: flex; gap: 2.5rem; }
+    nav a { color: var(--muted); text-decoration: none; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; position: relative; }
+    nav a:hover { color: var(--text); }
+    nav a.active { color: var(--text); }
+    nav a.active::after { content: ''; position: absolute; bottom: -6px; left: 0; width: 100%; height: 2px; background: #fff; }
+
+    .cv-btn { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); padding: 0.5rem 1.1rem; border-radius: 6px; text-decoration: none; transition: all 0.25s; white-space: nowrap; }
+    .cv-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+    .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 40px; height: 40px; cursor: pointer; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px; z-index: 200; }
+    .hamburger span { display: block; height: 1.5px; background: #fff; border-radius: 2px; transition: all 0.35s cubic-bezier(0.16,1,0.3,1); transform-origin: center; }
+    .hamburger span:nth-child(2) { width: 60%; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; background: rgba(26,26,31,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 5rem 2rem 2rem; z-index: 150; flex-direction: column; transform: translateY(-100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); }
+    .mobile-menu.open { transform: translateY(0); }
+    .mobile-menu a { color: var(--muted); text-decoration: none; font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; padding: 1.1rem 0; border-bottom: 1px solid var(--border); transition: color 0.3s; display: flex; justify-content: space-between; align-items: center; }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover, .mobile-menu a.active { color: #fff; }
+    .mobile-menu a::after { content: '↗'; font-size: 0.7rem; opacity: 0.4; }
+
+    .page { position: relative; z-index: 1; }
+
+    /* LAYOUT */
+    .contact-wrap {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 7rem;
+    }
+
+    /* LEFT */
+    .contact-left {
+      padding: 5rem 4rem;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+
+    .contact-left .subtitle { font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); margin-bottom: 1.2rem; }
+    .contact-left h1 { font-family: var(--font-serif); font-size: clamp(3rem, 5vw, 5rem); font-weight: 400; line-height: 0.95; text-transform: uppercase; margin-bottom: 2rem; }
+    .contact-left h1 em { font-style: italic; color: var(--muted); }
+    .contact-left .intro { font-size: 0.88rem; color: var(--muted); line-height: 1.8; max-width: 380px; margin-bottom: 3.5rem; }
+
+    .contact-links { display: flex; flex-direction: column; gap: 0; }
+    .contact-link {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 0; border-top: 1px solid var(--border);
+      text-decoration: none; color: var(--text);
+      transition: padding-left 0.3s;
+    }
+    .contact-link:last-child { border-bottom: 1px solid var(--border); }
+    .contact-link:hover { padding-left: 0.5rem; }
+    .contact-link:hover .cl-arrow { opacity: 1; transform: translate(3px, -3px); }
+    .cl-left { display: flex; align-items: center; }
+    .cl-text { display: flex; flex-direction: column; gap: 0.3rem; }
+    .cl-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+    .cl-value { font-size: 0.9rem; }
+    .cl-icon { width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 1rem; }
+    .cl-icon svg { width: 16px; height: 16px; fill: #fff; }
+    .cl-arrow { font-size: 1rem; opacity: 0.3; transition: all 0.3s; }
+
+    .availability {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin-top: 3rem;
+      font-size: 0.75rem; color: var(--muted); letter-spacing: 1px;
+    }
+    .avail-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: #4ade80;
+      box-shadow: 0 0 8px #4ade80;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* RIGHT — FORM */
+    .contact-right {
+      padding: 5rem 4rem;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+
+    .form-label-top { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 2.5rem; }
+
+    form { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .field { display: flex; flex-direction: column; gap: 0.5rem; }
+    .field label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+    .field input, .field textarea, .field select {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); font-family: var(--font-sans); font-size: 0.85rem;
+      padding: 0.9rem 1.1rem; border-radius: 8px;
+      outline: none; transition: border-color 0.25s;
+      width: 100%;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus { border-color: rgba(255,255,255,0.3); }
+    .field textarea { resize: vertical; min-height: 130px; }
+    .field select option { background: var(--bg); }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+    .submit-btn {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #fff; color: #000; border: none;
+      padding: 1.1rem 1.8rem; border-radius: 8px;
+      font-family: var(--font-sans); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;
+      cursor: pointer; transition: all 0.3s; margin-top: 0.5rem;
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,255,255,0.1); }
+    .submit-btn .btn-arrow { font-size: 1rem; transition: transform 0.3s; }
+    .submit-btn:hover .btn-arrow { transform: translate(4px, -4px); }
+
+    .form-note { font-size: 0.68rem; color: var(--muted); margin-top: 0.5rem; line-height: 1.6; }
+
+    /* SUCCESS STATE */
+    .success-msg {
+      display: none; text-align: center; padding: 3rem;
+      flex-direction: column; align-items: center; gap: 1rem;
+    }
+    .success-msg.show { display: flex; }
+    .success-icon { font-size: 2.5rem; }
+    .success-msg h3 { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 400; }
+    .success-msg p { font-size: 0.82rem; color: var(--muted); }
+
+    /* PAGE NAV */
+    .page-nav { position: fixed; bottom: 3rem; right: 4rem; display: flex; gap: 1rem; z-index: 100; }
+    .nav-btn { width: 50px; height: 50px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; text-decoration: none; }
+    .nav-btn:hover { background: rgba(255,255,255,0.08); }
+    .nav-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+    @media (max-width: 768px) {
+      header { padding: 1.2rem 1.5rem; }
+      .brand { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+      .brand-tag { display: block; border-left: none; padding-left: 0; font-size: 0.6rem; }
+      nav { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+      .contact-wrap { grid-template-columns: 1fr; padding-top: 5rem; }
+      .contact-left { padding: 3rem 1.5rem; border-right: none; border-bottom: 1px solid var(--border); }
+      .contact-right { padding: 3rem 1.5rem; }
+      .field-row { grid-template-columns: 1fr; gap: 1.5rem; }
+      .page-nav { bottom: 2rem; right: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-fixed"></div>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <button onclick="toggleMenu()" style="align-self:flex-end;background:none;border:1px solid var(--border);color:#fff;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;margin-bottom:1rem;">✕</button>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/experience">Experience</a>
+    <a href="/projects">Projects</a>
+    <a href="/skills">Skills</a>
+    <a href="/contact" class="active">Contact</a>
+  </div>
+
+  <header>
+    <div class="brand">
+      <a href="/" class="logo">DALLAH / DEV</a>
+      <div class="brand-tag">SYSTEM ARCHITECTURE & CLOUD INFRASTRUCTURE</div>
+    </div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/experience">Experience</a>
+      <a href="/projects">Projects</a>
+      <a href="/skills">Skills</a>
+      <a href="/contact" class="active">Contact</a>
+    </nav>
+    <a href="/dallah-erick-cv.pdf" download class="cv-btn">Download CV</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <div class="page">
+    <div class="contact-wrap">
+
+      <!-- LEFT -->
+      <div class="contact-left">
+        <div>
+          <p class="subtitle">Get In Touch</p>
+          <h1>LET'S<br><em>Work</em><br>TOGETHER</h1>
+          <p class="intro">Open to full-time roles, freelance contracts, and collaborative projects in cloud infrastructure, full-stack development, and AI integration.</p>
+
+          <div class="contact-links">
+            <a class="contact-link" href="mailto:DALLAHerick@gmail.com">
+              <div class="cl-left">
+                <div class="cl-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+                <div class="cl-text"><span class="cl-label">Email</span><span class="cl-value">DALLAHerick@gmail.com</span></div>
+              </div>
+              <span class="cl-arrow">↗</span>
+            </a>
+            <a class="contact-link" href="https://www.linkedin.com/in/dallah-erick-866179350" target="_blank" rel="noopener">
+              <div class="cl-left">
+                <div class="cl-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM9 17H6.5v-7H9v7zm-1.25-8.27a1.37 1.37 0 1 1 0-2.74 1.37 1.37 0 0 1 0 2.74zM18 17h-2.5v-3.5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5V17H10v-7h2.5v1.1c.46-.7 1.27-1.1 2-1.1 1.66 0 3 1.34 3 3V17z"/></svg></div>
+                <div class="cl-text"><span class="cl-label">LinkedIn</span><span class="cl-value">linkedin.com/in/dallah-erick-866179350</span></div>
+              </div>
+              <span class="cl-arrow">↗</span>
+            </a>
+            <a class="contact-link" href="https://github.com/Dog254" target="_blank" rel="noopener">
+              <div class="cl-left">
+                <div class="cl-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0 1 12 6.8c.85 0 1.71.11 2.51.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.01 10.01 0 0 0 22 12c0-5.52-4.48-10-10-10z"/></svg></div>
+                <div class="cl-text"><span class="cl-label">GitHub</span><span class="cl-value">github.com/Dog254</span></div>
+              </div>
+              <span class="cl-arrow">↗</span>
+            </a>
+            <a class="contact-link" href="https://wa.me/254704291657" target="_blank" rel="noopener">
+              <div class="cl-left">
+                <div class="cl-icon"><svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.28-.14-1.65-.81-1.9-.9-.26-.1-.44-.14-.63.14-.19.28-.72.9-.88 1.08-.16.19-.33.21-.6.07-.28-.14-1.17-.43-2.23-1.37-.82-.73-1.38-1.63-1.54-1.91-.16-.28-.02-.43.12-.57.13-.13.28-.33.42-.5.14-.17.19-.28.28-.47.1-.19.05-.35-.02-.5-.07-.14-.63-1.52-.86-2.08-.23-.55-.46-.47-.63-.48H8.5c-.19 0-.49.07-.74.35-.26.28-1 .98-1 2.38s1.02 2.76 1.17 2.95c.14.19 2.01 3.07 4.87 4.3.68.29 1.21.47 1.62.6.68.22 1.3.19 1.79.11.55-.08 1.65-.67 1.88-1.32.23-.65.23-1.2.16-1.32-.07-.12-.26-.19-.54-.33zM12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2zm0 2a8 8 0 0 0-8 8c0 1.72.54 3.31 1.46 4.61L4.5 19.5l2.96-.95A7.95 7.95 0 0 0 12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8z"/></svg></div>
+                <div class="cl-text"><span class="cl-label">WhatsApp</span><span class="cl-value">+254 704 291 657</span></div>
+              </div>
+              <span class="cl-arrow">↗</span>
+            </a>
+            <a class="contact-link" href="https://wa.me/254796605090" target="_blank" rel="noopener">
+              <div class="cl-left">
+                <div class="cl-icon"><svg viewBox="0 0 24 24"><path d="M17.47 14.38c-.28-.14-1.65-.81-1.9-.9-.26-.1-.44-.14-.63.14-.19.28-.72.9-.88 1.08-.16.19-.33.21-.6.07-.28-.14-1.17-.43-2.23-1.37-.82-.73-1.38-1.63-1.54-1.91-.16-.28-.02-.43.12-.57.13-.13.28-.33.42-.5.14-.17.19-.28.28-.47.1-.19.05-.35-.02-.5-.07-.14-.63-1.52-.86-2.08-.23-.55-.46-.47-.63-.48H8.5c-.19 0-.49.07-.74.35-.26.28-1 .98-1 2.38s1.02 2.76 1.17 2.95c.14.19 2.01 3.07 4.87 4.3.68.29 1.21.47 1.62.6.68.22 1.3.19 1.79.11.55-.08 1.65-.67 1.88-1.32.23-.65.23-1.2.16-1.32-.07-.12-.26-.19-.54-.33zM12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2zm0 2a8 8 0 0 0-8 8c0 1.72.54 3.31 1.46 4.61L4.5 19.5l2.96-.95A7.95 7.95 0 0 0 12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8z"/></svg></div>
+                <div class="cl-text"><span class="cl-label">WhatsApp (Alt)</span><span class="cl-value">+254 796 605 090</span></div>
+              </div>
+              <span class="cl-arrow">↗</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="availability">
+          <div class="avail-dot"></div>
+          Available for new opportunities — Nairobi, Kenya · Remote
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="contact-right">
+        <p class="form-label-top">Send a Message</p>
+
+        <form id="contactForm" onsubmit="handleSubmit(event)" novalidate>
+          <div class="field-row">
+            <div class="field">
+              <label for="fname">Name</label>
+              <input type="text" id="fname" name="name" placeholder="Your name" required />
+            </div>
+            <div class="field">
+              <label for="femail">Email</label>
+              <input type="email" id="femail" name="email" placeholder="your@email.com" required />
+            </div>
+          </div>
+          <div class="field">
+            <label for="fsubject">Subject</label>
+            <select id="fsubject" name="subject">
+              <option value="">Select a topic</option>
+              <option>Full-Time Role</option>
+              <option>Freelance / Contract</option>
+              <option>Collaboration</option>
+              <option>General Enquiry</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="fmsg">Message</label>
+            <textarea id="fmsg" name="message" placeholder="Tell me about your project or opportunity..." required></textarea>
+          </div>
+          <button type="submit" class="submit-btn">
+            Send Message <span class="btn-arrow">↗</span>
+          </button>
+          <p class="form-note">I typically respond within 24 hours.</p>
+        </form>
+
+        <div class="success-msg" id="successMsg">
+          <div class="success-icon">✉️</div>
+          <h3>Message Sent</h3>
+          <p>Thanks for reaching out — I'll get back to you shortly.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="page-nav">
+    <a href="/skills" class="nav-btn" aria-label="Previous">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      const form = document.getElementById('contactForm');
+      const success = document.getElementById('successMsg');
+      form.style.display = 'none';
+      success.classList.add('show');
+    }
+  </script>
+</body>
+</html>

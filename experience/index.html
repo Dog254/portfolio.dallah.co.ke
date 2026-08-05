@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dallah Erick — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --bg: #1a1a1f;
+      --surface: #222228;
+      --border: rgba(255,255,255,0.08);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.5);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-sans); background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+    /* BG */
+    .bg-fixed {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-size: cover; background-position: center;
+      opacity: 0.08;
+      transition: background-image 0.8s ease;
+    }
+
+    /* NAV */
+    header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 2.5rem 4rem;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(26,26,31,0.97) 0%, transparent 100%);
+    }
+
+    .brand { display: flex; align-items: center; gap: 1.2rem; }
+    .logo { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 700; letter-spacing: 2px; text-decoration: none; color: var(--text); }
+    .brand-tag { font-size: 0.7rem; color: var(--muted); max-width: 180px; line-height: 1.3; border-left: 1px solid rgba(255,255,255,0.25); padding-left: 1rem; letter-spacing: 1px; }
+
+    nav { display: flex; gap: 2.5rem; }
+    nav a { color: var(--muted); text-decoration: none; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; position: relative; }
+    nav a:hover { color: var(--text); }
+    nav a.active { color: var(--text); }
+    nav a.active::after { content: ''; position: absolute; bottom: -6px; left: 0; width: 100%; height: 2px; background: #fff; }
+
+    /* HAMBURGER */
+    .cv-btn { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); padding: 0.5rem 1.1rem; border-radius: 6px; text-decoration: none; transition: all 0.25s; white-space: nowrap; }
+    .cv-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+    .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 40px; height: 40px; cursor: pointer; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px; z-index: 200; }
+    .hamburger span { display: block; height: 1.5px; background: #fff; border-radius: 2px; transition: all 0.35s cubic-bezier(0.16,1,0.3,1); transform-origin: center; }
+    .hamburger span:nth-child(2) { width: 60%; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; background: rgba(26,26,31,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 5rem 2rem 2rem; z-index: 150; flex-direction: column; transform: translateY(-100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); }
+    .mobile-menu.open { transform: translateY(0); }
+    .mobile-menu a { color: var(--muted); text-decoration: none; font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; padding: 1.1rem 0; border-bottom: 1px solid var(--border); transition: color 0.3s; display: flex; justify-content: space-between; align-items: center; }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover, .mobile-menu a.active { color: #fff; }
+    .mobile-menu a::after { content: '↗'; font-size: 0.7rem; opacity: 0.4; }
+
+    /* LAYOUT */
+    .page { position: relative; z-index: 1; }
+
+    /* PAGE HEADER */
+    .page-header {
+      padding: 12rem 4rem 5rem;
+      display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-header .subtitle { font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+
+    .page-header h1 { font-family: var(--font-serif); font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 400; line-height: 0.95; text-transform: uppercase; }
+    .page-header h1 em { font-style: italic; color: var(--muted); }
+
+    /* IMAGE SWITCHER */
+    .img-switcher {
+      display: flex; gap: 0.6rem; align-items: center;
+    }
+
+    .img-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.3);
+      cursor: pointer; transition: all 0.3s;
+      background: transparent;
+      padding: 0;
+    }
+
+    .img-dot.active { background: #fff; border-color: #fff; width: 24px; border-radius: 4px; }
+
+    /* MAIN CONTENT GRID */
+    .exp-layout {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 0;
+      min-height: 100vh;
+    }
+
+    /* LEFT: TIMELINE */
+    .timeline { padding: 4rem; border-right: 1px solid var(--border); }
+
+    .timeline-section { margin-bottom: 5rem; }
+
+    .timeline-section-label {
+      font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 2.5rem;
+      padding-bottom: 1rem; border-bottom: 1px solid var(--border);
+    }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 2rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .exp-item:last-child { border-bottom: none; }
+    .exp-item:hover, .exp-item.active { background: rgba(255,255,255,0.02); }
+    .exp-item.active .exp-company { color: #fff; }
+
+    .exp-date { font-size: 0.7rem; letter-spacing: 1px; color: var(--muted); padding-top: 0.3rem; line-height: 1.6; }
+
+    .exp-company { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 400; margin-bottom: 0.3rem; transition: color 0.3s; }
+
+    .exp-role { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+
+    .exp-highlights { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .exp-highlights li {
+      font-size: 0.82rem; color: rgba(255,255,255,0.7); line-height: 1.6;
+      padding-left: 1rem; position: relative;
+    }
+
+    .exp-highlights li::before { content: '—'; position: absolute; left: 0; color: var(--muted); }
+
+    .exp-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+
+    .tag { font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); padding: 0.3rem 0.7rem; border-radius: 100px; }
+
+    /* RIGHT: STICKY PANEL */
+    .sticky-panel {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-img {
+      flex: 1;
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.6s ease;
+      position: relative;
+    }
+
+    .panel-img::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(26,26,31,0.95) 100%);
+    }
+
+    .panel-info {
+      padding: 2rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+
+    .panel-company { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 400; margin-bottom: 0.3rem; }
+    .panel-role { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+
+    .panel-stats { display: flex; gap: 2rem; }
+    .panel-stat-num { font-family: var(--font-serif); font-size: 1.8rem; }
+    .panel-stat-label { font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+
+    /* EDUCATION STRIP */
+    .edu-strip {
+      padding: 5rem 4rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .edu-strip-label {
+      font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 3rem;
+      padding-bottom: 1rem; border-bottom: 1px solid var(--border);
+    }
+
+    .edu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .edu-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      transition: border-color 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .edu-item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, rgba(255,255,255,0.15), transparent);
+    }
+
+    .edu-item:hover { border-color: rgba(255,255,255,0.2); }
+
+    .edu-icon {
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.6;
+    }
+
+    .edu-year {
+      font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.6rem;
+    }
+
+    .edu-school {
+      font-family: var(--font-serif); font-size: 1.2rem;
+      font-weight: 400; margin-bottom: 0.4rem; line-height: 1.3;
+    }
+
+    .edu-degree {
+      font-size: 0.78rem; color: rgba(255,255,255,0.6);
+      line-height: 1.5; margin-bottom: 1.2rem;
+    }
+
+    .edu-divider {
+      width: 30px; height: 1px;
+      background: rgba(255,255,255,0.15);
+      margin-bottom: 1.2rem;
+    }
+
+    .edu-focus {
+      font-size: 0.72rem; color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .edu-tags {
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      margin-top: auto; padding-top: 1.5rem;
+    }
+
+    .edu-tag {
+      font-size: 0.58rem; letter-spacing: 1px; text-transform: uppercase;
+      color: var(--muted); border: 1px solid var(--border);
+      padding: 0.25rem 0.6rem; border-radius: 100px;
+    }
+
+    /* PAGE NAV */
+    .page-nav { position: fixed; bottom: 3rem; right: 4rem; display: flex; gap: 1rem; z-index: 100; }
+    .nav-btn { width: 50px; height: 50px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; text-decoration: none; }
+    .nav-btn:hover { background: rgba(255,255,255,0.08); }
+    .nav-btn.next { background: #fff; border-color: #fff; color: #000; }
+    .nav-btn.next:hover { transform: scale(1.1); }
+    .nav-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+    @media (max-width: 768px) {
+      header { padding: 1.2rem 1.5rem; }
+      .brand { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+      .brand-tag { display: block; border-left: none; padding-left: 0; font-size: 0.6rem; }
+      nav { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+      .page-header { padding: 9rem 1.5rem 3rem; }
+      .exp-layout { grid-template-columns: 1fr; }
+      .sticky-panel { display: none; }
+      .timeline { padding: 2rem 1.5rem; }
+      .exp-item { grid-template-columns: 80px 1fr; gap: 1rem; }
+      .edu-strip { padding: 3rem 1.5rem; }
+      .edu-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .edu-item { padding: 1.8rem; }
+      .edu-icon { font-size: 1.1rem; margin-bottom: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-fixed" id="bgFixed" style="background-image:url('https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&w=1920&q=80')"></div>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <button onclick="toggleMenu()" style="align-self:flex-end;background:none;border:1px solid var(--border);color:#fff;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;margin-bottom:1rem;">✕</button>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/experience" class="active">Experience</a>
+    <a href="/projects">Projects</a>
+    <a href="/skills">Skills</a>
+    <a href="/contact">Contact</a>
+  </div>
+
+  <header>
+    <div class="brand">
+      <a href="/" class="logo">DALLAH / DEV</a>
+      <div class="brand-tag">SYSTEM ARCHITECTURE & CLOUD INFRASTRUCTURE</div>
+    </div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/experience" class="active">Experience</a>
+      <a href="/projects">Projects</a>
+      <a href="/skills">Skills</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <a href="/dallah-erick-cv.pdf" download class="cv-btn">Download CV</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <div class="page">
+
+    <div class="page-header">
+      <div>
+        <p class="subtitle">Career Journey</p>
+        <h1>WORK &<br><em>Experience</em></h1>
+      </div>
+      <div class="img-switcher" id="imgSwitcher">
+        <button class="img-dot active" onclick="switchBg(0)"></button>
+        <button class="img-dot" onclick="switchBg(1)"></button>
+        <button class="img-dot" onclick="switchBg(2)"></button>
+        <button class="img-dot" onclick="switchBg(3)"></button>
+      </div>
+    </div>
+
+    <div class="exp-layout">
+
+      <!-- LEFT TIMELINE -->
+      <div class="timeline">
+
+        <div class="timeline-section">
+          <div class="timeline-section-label">Work Experience</div>
+
+          <!-- Fagi Errands -->
+          <div class="exp-item active" onclick="setActive(this, 0)">
+            <div class="exp-date">Jan 2026<br>Present</div>
+            <div>
+              <div class="exp-company">Fagi Errands</div>
+              <div class="exp-role">Lead Infrastructure Engineer</div>
+              <ul class="exp-highlights">
+                <li>Full ownership of 4 standalone interfaces — customer & rider mobile apps — via a unified Python-based API layer.</li>
+                <li>Weekly API versioning every Saturday with zero breaking changes and full backward compatibility.</li>
+                <li>Nightly 00:00–03:00 deployment window for Google Play & App Store — maintaining peak ranking and stability.</li>
+                <li>Operationalised DAST/SAST findings into daily production pushes: CVE patching, WAF updates, strict IAM enforcement.</li>
+                <li>Administered PostgreSQL & MySQL with Grafana/Prometheus dashboards monitoring API latency 24/7.</li>
+              </ul>
+              <div class="exp-tags">
+                <span class="tag">Python</span>
+                <span class="tag">PostgreSQL</span>
+                <span class="tag">Grafana</span>
+                <span class="tag">Prometheus</span>
+                <span class="tag">IAM</span>
+                <span class="tag">WAF</span>
+                <span class="tag">DevSecOps</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- BlueTechnology -->
+          <div class="exp-item" onclick="setActive(this, 1)">
+            <div class="exp-date">Aug 2025<br>Jan 2026</div>
+            <div>
+              <div class="exp-company">BlueTechnology</div>
+              <div class="exp-role">Cloud Full-Stack Developer</div>
+              <ul class="exp-highlights">
+                <li>Architected a serverless e-commerce platform using AWS Lambda, API Gateway and a React frontend.</li>
+                <li>Reduced release times by 30% by automating CI/CD pipelines with Docker and AWS CodePipeline.</li>
+                <li>Managed scalable EC2, RDS and S3 environments using CloudFormation with Jest and Cypress testing.</li>
+              </ul>
+              <div class="exp-tags">
+                <span class="tag">AWS Lambda</span>
+                <span class="tag">React</span>
+                <span class="tag">Docker</span>
+                <span class="tag">CloudFormation</span>
+                <span class="tag">CodePipeline</span>
+                <span class="tag">Jest</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- FlavorFind -->
+          <div class="exp-item" onclick="setActive(this, 2)">
+            <div class="exp-date">2025</div>
+            <div>
+              <div class="exp-company">FlavorFind</div>
+              <div class="exp-role">Mobile App Developer · AI Integration</div>
+              <ul class="exp-highlights">
+                <li>Engineered a mobile app using React Native, Spoonacular and OpenAI APIs for personalised recipe generation.</li>
+                <li>Reduced food waste by 20% through AI-driven ingredient recommendations.</li>
+                <li>Designed scalable data pipelines to structure ingredient data for efficient AI model consumption.</li>
+              </ul>
+              <div class="exp-tags">
+                <span class="tag">React Native</span>
+                <span class="tag">OpenAI</span>
+                <span class="tag">Spoonacular</span>
+                <span class="tag">Data Pipelines</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Open Data Annotation -->
+          <div class="exp-item" onclick="setActive(this, 3)">
+            <div class="exp-date">Nov 2025<br>Jan 2026</div>
+            <div>
+              <div class="exp-company">Open Data Annotation</div>
+              <div class="exp-role">AI Data Operations Specialist</div>
+              <ul class="exp-highlights">
+                <li>Annotated multimodal datasets for computer vision and ML training using Labelbox and CVAT.</li>
+                <li>Refined annotation guidelines and optimised QA workflows — 15% improvement in dataset accuracy.</li>
+              </ul>
+              <div class="exp-tags">
+                <span class="tag">Labelbox</span>
+                <span class="tag">CVAT</span>
+                <span class="tag">Computer Vision</span>
+                <span class="tag">ML</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT STICKY PANEL -->
+      <div class="sticky-panel">
+        <div class="panel-img" id="panelImg" style="background-image:url('https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&w=800&q=80')"></div>
+        <div class="panel-info" id="panelInfo">
+          <div class="panel-company" id="panelCompany">Fagi Errands</div>
+          <div class="panel-role" id="panelRole">Lead Infrastructure Engineer · Jan 2026 – Present</div>
+          <div class="panel-stats">
+            <div>
+              <div class="panel-stat-num" id="panelStat1">4</div>
+              <div class="panel-stat-label">Apps Managed</div>
+            </div>
+            <div>
+              <div class="panel-stat-num" id="panelStat2">24/7</div>
+              <div class="panel-stat-label">Uptime Vigilance</div>
+            </div>
+            <div>
+              <div class="panel-stat-num" id="panelStat3">0</div>
+              <div class="panel-stat-label">Downtime Events</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="edu-strip">
+      <div class="edu-strip-label">Education & Certifications</div>
+      <div class="edu-grid">
+
+        <div class="edu-item">
+          <div class="edu-icon">🎓</div>
+          <div class="edu-year">2022 – 2026 (Expected)</div>
+          <div class="edu-school">Presbyterian University of East Africa</div>
+          <div class="edu-degree">Bachelor of Science in Computer Science</div>
+          <div class="edu-divider"></div>
+          <div class="edu-focus">Software Engineering · System Design · Core Computing Principles · Advanced Software Testing (Manual & Automated) · Full-Stack Backend with Node.js & Express</div>
+          <div class="edu-tags">
+            <span class="edu-tag">Computer Science</span>
+            <span class="edu-tag">Software Engineering</span>
+            <span class="edu-tag">Node.js</span>
+          </div>
+        </div>
+
+        <div class="edu-item">
+          <div class="edu-icon">☁️</div>
+          <div class="edu-year">2025</div>
+          <div class="edu-school">NextStep Foundation</div>
+          <div class="edu-degree">AWS Solutions Architect – Associate</div>
+          <div class="edu-divider"></div>
+          <div class="edu-focus">Scalable Design · Cost Optimisation · AWS Core Service Migration · IAM & Security · Automation Scripting · CI/CD Pipelines · Infrastructure as Code · Containerisation</div>
+          <div class="edu-tags">
+            <span class="edu-tag">AWS</span>
+            <span class="edu-tag">IaC</span>
+            <span class="edu-tag">DevOps</span>
+            <span class="edu-tag">Security</span>
+          </div>
+        </div>
+
+        <div class="edu-item">
+          <div class="edu-icon">⚡</div>
+          <div class="edu-year">2025</div>
+          <div class="edu-school">ALX Africa</div>
+          <div class="edu-degree">Front-End Development & Full-Stack Integration + Professional Foundations</div>
+          <div class="edu-divider"></div>
+          <div class="edu-focus">React · Next.js · Vue.js · REST/GraphQL APIs · Python (Django/Flask) · SQL & NoSQL · Agile Collaboration · Stakeholder Communication</div>
+          <div class="edu-tags">
+            <span class="edu-tag">React</span>
+            <span class="edu-tag">Python</span>
+            <span class="edu-tag">GraphQL</span>
+            <span class="edu-tag">Agile</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-nav">
+    <a href="/about" class="nav-btn" aria-label="Previous">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
+    <a href="/projects" class="nav-btn next" aria-label="Next">
+      <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+    </a>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    const bgImages = [
+      'https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&w=1920&q=80',
+      'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1920&q=80',
+      'https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=1920&q=80',
+      'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=1920&q=80',
+    ];
+
+    const panelImages = [
+      'https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',
+    ];
+
+    const panelData = [
+      { company: 'Fagi Errands', role: 'Lead Infrastructure Engineer · Jan 2026 – Present', s1: '4', l1: 'Apps Managed', s2: '24/7', l2: 'Uptime Vigilance', s3: '0', l3: 'Downtime Events' },
+      { company: 'BlueTechnology', role: 'Cloud Full-Stack Developer · Aug 2025 – Jan 2026', s1: '30%', l1: 'Faster Releases', s2: '3', l2: 'AWS Services', s3: '100%', l3: 'Test Coverage' },
+      { company: 'FlavorFind', role: 'Mobile App Developer · 2025', s1: '20%', l1: 'Waste Reduced', s2: '2', l2: 'AI APIs', s3: '1', l3: 'App Shipped' },
+      { company: 'Open Data Annotation', role: 'AI Data Ops Specialist · Nov 2025 – Jan 2026', s1: '15%', l1: 'Accuracy Gain', s2: '2', l2: 'Tools Used', s3: 'Multi', l3: 'Modal Datasets' },
+    ];
+
+    function switchBg(index) {
+      document.getElementById('bgFixed').style.backgroundImage = `url('${bgImages[index]}')`;
+      document.querySelectorAll('.img-dot').forEach((d, i) => d.classList.toggle('active', i === index));
+    }
+
+    function setActive(el, index) {
+      document.querySelectorAll('.exp-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+
+      const d = panelData[index];
+      document.getElementById('panelImg').style.backgroundImage = `url('${panelImages[index]}')`;
+      document.getElementById('panelCompany').textContent = d.company;
+      document.getElementById('panelRole').textContent = d.role;
+      document.getElementById('panelStat1').textContent = d.s1;
+      document.getElementById('panelStat1').nextElementSibling.textContent = d.l1;
+      document.getElementById('panelStat2').textContent = d.s2;
+      document.getElementById('panelStat2').nextElementSibling.textContent = d.l2;
+      document.getElementById('panelStat3').textContent = d.s3;
+      document.getElementById('panelStat3').nextElementSibling.textContent = d.l3;
+
+      switchBg(index);
+    }
+
+    // Auto-cycle bg every 6s
+    let bgIndex = 0;
+    setInterval(() => {
+      bgIndex = (bgIndex + 1) % bgImages.length;
+      switchBg(bgIndex);
+    }, 6000);
+  </script>
+</body>
+</html>

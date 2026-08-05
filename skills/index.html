@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dallah Erick — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --bg: #1a1a1f;
+      --surface: #222228;
+      --border: rgba(255,255,255,0.08);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.5);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-sans); background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+    .bg-fixed {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: url('https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover; background-position: center; opacity: 0.06;
+    }
+
+    header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 2.5rem 4rem;
+      display: flex; justify-content: space-between; align-items: center;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(26,26,31,0.97) 0%, transparent 100%);
+    }
+    .brand { display: flex; align-items: center; gap: 1.2rem; }
+    .logo { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 700; letter-spacing: 2px; text-decoration: none; color: var(--text); }
+    .brand-tag { font-size: 0.7rem; color: var(--muted); max-width: 180px; line-height: 1.3; border-left: 1px solid rgba(255,255,255,0.25); padding-left: 1rem; letter-spacing: 1px; }
+    nav { display: flex; gap: 2.5rem; }
+    nav a { color: var(--muted); text-decoration: none; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; position: relative; }
+    nav a:hover { color: var(--text); }
+    nav a.active { color: var(--text); }
+    nav a.active::after { content: ''; position: absolute; bottom: -6px; left: 0; width: 100%; height: 2px; background: #fff; }
+
+    .cv-btn { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); border: 1px solid var(--border); padding: 0.5rem 1.1rem; border-radius: 6px; text-decoration: none; transition: all 0.25s; white-space: nowrap; }
+    .cv-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+    .hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 40px; height: 40px; cursor: pointer; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px; z-index: 200; }
+    .hamburger span { display: block; height: 1.5px; background: #fff; border-radius: 2px; transition: all 0.35s cubic-bezier(0.16,1,0.3,1); transform-origin: center; }
+    .hamburger span:nth-child(2) { width: 60%; }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-menu { display: none; position: fixed; top: 0; left: 0; right: 0; background: rgba(26,26,31,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 5rem 2rem 2rem; z-index: 150; flex-direction: column; transform: translateY(-100%); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1); }
+    .mobile-menu.open { transform: translateY(0); }
+    .mobile-menu a { color: var(--muted); text-decoration: none; font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; padding: 1.1rem 0; border-bottom: 1px solid var(--border); transition: color 0.3s; display: flex; justify-content: space-between; align-items: center; }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu a:hover, .mobile-menu a.active { color: #fff; }
+    .mobile-menu a::after { content: '↗'; font-size: 0.7rem; opacity: 0.4; }
+
+    .page { position: relative; z-index: 1; }
+
+    /* PAGE HEADER */
+    .page-header {
+      padding: 12rem 4rem 5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem;
+    }
+    .page-header .subtitle { font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .page-header h1 { font-family: var(--font-serif); font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 400; line-height: 0.95; text-transform: uppercase; }
+    .page-header h1 em { font-style: italic; color: var(--muted); }
+    .page-header p { font-size: 0.85rem; color: var(--muted); max-width: 340px; line-height: 1.7; }
+
+    /* CATEGORY TABS */
+    .cat-tabs {
+      display: flex; gap: 0; border-bottom: 1px solid var(--border);
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .cat-tabs::-webkit-scrollbar { display: none; }
+    .cat-tab {
+      padding: 1.2rem 2rem; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--muted); cursor: pointer; border: none; background: none;
+      font-family: var(--font-sans); border-bottom: 2px solid transparent;
+      transition: all 0.25s; white-space: nowrap;
+    }
+    .cat-tab:hover { color: #fff; }
+    .cat-tab.active { color: #fff; border-bottom-color: #fff; }
+
+    /* SKILLS CONTENT */
+    .skills-content { padding: 4rem; }
+
+    .skills-panel { display: none; }
+    .skills-panel.active { display: block; }
+
+    /* SKILL GROUP */
+    .skill-group { margin-bottom: 4rem; }
+    .skill-group-title {
+      font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 2rem;
+      padding-bottom: 0.8rem; border-bottom: 1px solid var(--border);
+    }
+
+    /* BAR SKILLS */
+    .skill-bars { display: flex; flex-direction: column; gap: 1.4rem; }
+    .skill-bar-item { display: grid; grid-template-columns: 200px 1fr 40px; align-items: center; gap: 1.5rem; }
+    .skill-bar-name { font-size: 0.82rem; color: rgba(255,255,255,0.8); }
+    .skill-bar-track { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .skill-bar-fill { height: 100%; background: #fff; border-radius: 2px; width: 0; transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+    .skill-bar-pct { font-size: 0.7rem; color: var(--muted); text-align: right; }
+
+    /* TAG CLOUD */
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .skill-tag {
+      font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase;
+      color: rgba(255,255,255,0.75); border: 1px solid var(--border);
+      padding: 0.5rem 1rem; border-radius: 6px;
+      background: var(--surface);
+      transition: all 0.25s; cursor: default;
+    }
+    .skill-tag:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+
+    /* TOOL GRID */
+    .tool-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .tool-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.8rem 1.5rem;
+      display: flex; flex-direction: column; gap: 0.6rem;
+      transition: border-color 0.3s;
+    }
+    .tool-card:hover { border-color: rgba(255,255,255,0.2); }
+    .tool-icon { font-size: 1.6rem; }
+    .tool-name { font-size: 0.82rem; font-weight: 600; }
+    .tool-cat { font-size: 0.65rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+
+    /* PAGE NAV */
+    .page-nav { position: fixed; bottom: 3rem; right: 4rem; display: flex; gap: 1rem; z-index: 100; }
+    .nav-btn { width: 50px; height: 50px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; text-decoration: none; }
+    .nav-btn:hover { background: rgba(255,255,255,0.08); }
+    .nav-btn.next { background: #fff; border-color: #fff; color: #000; }
+    .nav-btn.next:hover { transform: scale(1.1); }
+    .nav-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+    @media (max-width: 768px) {
+      header { padding: 1.2rem 1.5rem; }
+      .brand { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+      .brand-tag { display: block; border-left: none; padding-left: 0; font-size: 0.6rem; }
+      nav { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+      .page-header { padding: 9rem 1.5rem 3rem; }
+      .skills-content { padding: 2rem 1.5rem; }
+      .skill-bar-item { grid-template-columns: 1fr 40px; gap: 0.8rem; }
+      .skill-bar-name { grid-column: 1 / -1; margin-bottom: -0.6rem; }
+      .tool-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+      .tool-card { padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-fixed"></div>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <button onclick="toggleMenu()" style="align-self:flex-end;background:none;border:1px solid var(--border);color:#fff;width:36px;height:36px;border-radius:50%;font-size:1.1rem;cursor:pointer;margin-bottom:1rem;">✕</button>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/experience">Experience</a>
+    <a href="/projects">Projects</a>
+    <a href="/skills" class="active">Skills</a>
+    <a href="/contact">Contact</a>
+  </div>
+
+  <header>
+    <div class="brand">
+      <a href="/" class="logo">DALLAH / DEV</a>
+      <div class="brand-tag">SYSTEM ARCHITECTURE & CLOUD INFRASTRUCTURE</div>
+    </div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/experience">Experience</a>
+      <a href="/projects">Projects</a>
+      <a href="/skills" class="active">Skills</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <a href="/dallah-erick-cv.pdf" download class="cv-btn">Download CV</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <div class="page">
+
+    <div class="page-header">
+      <div>
+        <p class="subtitle">Technical Arsenal</p>
+        <h1>SKILLS &<br><em>Technologies</em></h1>
+      </div>
+      <p>A full-spectrum toolkit spanning cloud infrastructure, backend systems, mobile & web development, and AI integration.</p>
+    </div>
+
+    <div class="cat-tabs">
+      <button class="cat-tab active" onclick="showPanel('cloud')">Cloud & Infra</button>
+      <button class="cat-tab" onclick="showPanel('backend')">Backend & APIs</button>
+      <button class="cat-tab" onclick="showPanel('frontend')">Frontend & Mobile</button>
+      <button class="cat-tab" onclick="showPanel('ai')">AI & Data</button>
+      <button class="cat-tab" onclick="showPanel('tools')">Tools</button>
+    </div>
+
+    <div class="skills-content">
+
+      <!-- CLOUD -->
+      <div class="skills-panel active" id="panel-cloud">
+        <div class="skill-group">
+          <div class="skill-group-title">AWS Core Services</div>
+          <div class="skill-bars">
+            <div class="skill-bar-item"><span class="skill-bar-name">EC2 / VPC / IAM</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="95"></div></div><span class="skill-bar-pct">95%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">Lambda / API Gateway</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="90"></div></div><span class="skill-bar-pct">90%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">S3 / RDS / DynamoDB</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="92"></div></div><span class="skill-bar-pct">92%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">CloudFormation / CDK</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="85"></div></div><span class="skill-bar-pct">85%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">Amplify / Cognito</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="80"></div></div><span class="skill-bar-pct">80%</span></div>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">DevOps & Observability</div>
+          <div class="skill-bars">
+            <div class="skill-bar-item"><span class="skill-bar-name">Terraform</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="85"></div></div><span class="skill-bar-pct">85%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">Docker / Kubernetes</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="88"></div></div><span class="skill-bar-pct">88%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">GitHub Actions / CodePipeline</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="90"></div></div><span class="skill-bar-pct">90%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">Grafana / Prometheus</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="87"></div></div><span class="skill-bar-pct">87%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">CloudWatch / WAF</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="88"></div></div><span class="skill-bar-pct">88%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BACKEND -->
+      <div class="skills-panel" id="panel-backend">
+        <div class="skill-group">
+          <div class="skill-group-title">Languages & Frameworks</div>
+          <div class="skill-bars">
+            <div class="skill-bar-item"><span class="skill-bar-name">Node.js / Express</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="92"></div></div><span class="skill-bar-pct">92%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">Python / FastAPI</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="90"></div></div><span class="skill-bar-pct">90%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">Python / Django & Flask</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="85"></div></div><span class="skill-bar-pct">85%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">NestJS</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="78"></div></div><span class="skill-bar-pct">78%</span></div>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Databases</div>
+          <div class="skill-bars">
+            <div class="skill-bar-item"><span class="skill-bar-name">PostgreSQL / MySQL</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="90"></div></div><span class="skill-bar-pct">90%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">MongoDB</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="82"></div></div><span class="skill-bar-pct">82%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">Redis</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="78"></div></div><span class="skill-bar-pct">78%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">DynamoDB</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="80"></div></div><span class="skill-bar-pct">80%</span></div>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">API Design</div>
+          <div class="tag-cloud">
+            <span class="skill-tag">REST</span><span class="skill-tag">GraphQL</span><span class="skill-tag">WebSocket</span>
+            <span class="skill-tag">OpenAPI / Swagger</span><span class="skill-tag">Serverless Functions</span>
+            <span class="skill-tag">API Versioning</span><span class="skill-tag">Backward Compatibility</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FRONTEND -->
+      <div class="skills-panel" id="panel-frontend">
+        <div class="skill-group">
+          <div class="skill-group-title">Web Frameworks</div>
+          <div class="skill-bars">
+            <div class="skill-bar-item"><span class="skill-bar-name">React.js</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="92"></div></div><span class="skill-bar-pct">92%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">Next.js</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="85"></div></div><span class="skill-bar-pct">85%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">Vue.js</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="78"></div></div><span class="skill-bar-pct">78%</span></div>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Mobile</div>
+          <div class="skill-bars">
+            <div class="skill-bar-item"><span class="skill-bar-name">React Native</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="88"></div></div><span class="skill-bar-pct">88%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">Flutter</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="70"></div></div><span class="skill-bar-pct">70%</span></div>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">State & Testing</div>
+          <div class="tag-cloud">
+            <span class="skill-tag">Redux</span><span class="skill-tag">Zustand</span>
+            <span class="skill-tag">Jest</span><span class="skill-tag">Cypress</span><span class="skill-tag">React Testing Library</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI -->
+      <div class="skills-panel" id="panel-ai">
+        <div class="skill-group">
+          <div class="skill-group-title">AI & ML Integration</div>
+          <div class="skill-bars">
+            <div class="skill-bar-item"><span class="skill-bar-name">OpenAI API</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="88"></div></div><span class="skill-bar-pct">88%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">LangChain</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="75"></div></div><span class="skill-bar-pct">75%</span></div>
+            <div class="skill-bar-item"><span class="skill-bar-name">TensorFlow.js</span><div class="skill-bar-track"><div class="skill-bar-fill" data-w="70"></div></div><span class="skill-bar-pct">70%</span></div>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Data Operations</div>
+          <div class="tag-cloud">
+            <span class="skill-tag">Labelbox</span><span class="skill-tag">CVAT</span>
+            <span class="skill-tag">Multimodal Annotation</span><span class="skill-tag">Dataset Curation</span>
+            <span class="skill-tag">ML Training Data</span><span class="skill-tag">Log Analysis</span>
+            <span class="skill-tag">Image / Video Annotation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOOLS -->
+      <div class="skills-panel" id="panel-tools">
+        <div class="skill-group">
+          <div class="skill-group-title">Daily Tools</div>
+          <div class="tool-grid">
+            <div class="tool-card"><div class="tool-icon">⚙️</div><div class="tool-name">GitHub Actions</div><div class="tool-cat">CI/CD</div></div>
+            <div class="tool-card"><div class="tool-icon">🐳</div><div class="tool-name">Docker</div><div class="tool-cat">Containerisation</div></div>
+            <div class="tool-card"><div class="tool-icon">☸️</div><div class="tool-name">Kubernetes</div><div class="tool-cat">Orchestration</div></div>
+            <div class="tool-card"><div class="tool-icon">📊</div><div class="tool-name">Grafana</div><div class="tool-cat">Observability</div></div>
+            <div class="tool-card"><div class="tool-icon">🔥</div><div class="tool-name">Prometheus</div><div class="tool-cat">Monitoring</div></div>
+            <div class="tool-card"><div class="tool-icon">🏗️</div><div class="tool-name">Terraform</div><div class="tool-cat">IaC</div></div>
+            <div class="tool-card"><div class="tool-icon">🧪</div><div class="tool-name">Jest / Cypress</div><div class="tool-cat">Testing</div></div>
+            <div class="tool-card"><div class="tool-icon">☁️</div><div class="tool-name">AWS Console</div><div class="tool-cat">Cloud</div></div>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Languages</div>
+          <div class="tag-cloud">
+            <span class="skill-tag">English — Fluent</span>
+            <span class="skill-tag">Swahili — Native</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="page-nav">
+    <a href="/projects" class="nav-btn" aria-label="Previous">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
+    <a href="/contact" class="nav-btn next" aria-label="Next">
+      <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+    </a>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+
+    function showPanel(id) {
+      document.querySelectorAll('.skills-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('panel-' + id).classList.add('active');
+      event.target.classList.add('active');
+      animateBars();
+    }
+
+    function animateBars() {
+      document.querySelectorAll('.skills-panel.active .skill-bar-fill').forEach(bar => {
+        bar.style.width = '0';
+        setTimeout(() => { bar.style.width = bar.dataset.w + '%'; }, 50);
+      });
+    }
+
+    // Animate on load
+    window.addEventListener('load', animateBars);
+  </script>
+</body>
+</html>
