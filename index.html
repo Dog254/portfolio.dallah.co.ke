@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interactive Animated CV - Phase 3</title>
+  <title>Dallah Erick — Portfolio</title>
   <style>
     /* --- RESET & VARIABLES --- */
     * {
@@ -629,6 +629,8 @@
       fill: #000;
     }
     /* --- HAMBURGER MENU --- */
+    .cv-btn { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border); padding: 0.5rem 1.1rem; border-radius: 6px; text-decoration: none; transition: all 0.25s; white-space: nowrap; }
+    .cv-btn:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
     .hamburger {
       display: none;
       flex-direction: column;
@@ -769,6 +771,7 @@
       <a class="nav-link" href="skills.html">Skills</a>
       <a class="nav-link" href="contact.html">Contact</a>
     </nav>
+    <a href="dallah-erick-cv.pdf" download class="cv-btn">Download CV</a>
     <button class="hamburger" id="hamburger" aria-label="Menu" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
