@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — DALA ERICK</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --accent: #ffffff;
+      --bg: #1a1a1f;
+      --surface: #222228;
+      --border: rgba(255,255,255,0.08);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.5);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    header {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      padding: 2.5rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(26,26,31,0.97) 0%, transparent 100%);
+    }
+
+    .brand { display: flex; align-items: center; gap: 1.2rem; }
+    .logo { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 700; letter-spacing: 2px; text-decoration: none; color: var(--text); }
+    .brand-tag { font-size: 0.7rem; color: var(--muted); max-width: 180px; line-height: 1.3; border-left: 1px solid rgba(255,255,255,0.25); padding-left: 1rem; letter-spacing: 1px; }
+
+    nav { display: flex; gap: 2.5rem; }
+    nav a { color: var(--muted); text-decoration: none; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; position: relative; }
+    nav a:hover { color: var(--text); }
+    nav a.active { color: var(--text); }
+    nav a.active::after { content: ''; position: absolute; bottom: -6px; left: 0; width: 100%; height: 2px; background: #fff; }
+
+    /* PAGE LAYOUT */
+    .page {
+      min-height: 100vh;
+      padding: 12rem 10vw 6rem;
+    }
+
+    /* HERO ROW */
+    .hero-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 4rem;
+      margin-bottom: 6rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-text .subtitle {
+      font-size: 0.8rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .hero-text h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(3.5rem, 7vw, 6.5rem);
+      line-height: 0.92;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    .hero-text h1 em {
+      font-style: italic;
+      color: rgba(255,255,255,0.6);
+    }
+
+
+
+    /* DIVIDER */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      margin-bottom: 5rem;
+    }
+
+    /* BIO GRID */
+    .bio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 4rem;
+      margin-bottom: 6rem;
+    }
+
+    .bio-label {
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .bio-text {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .bio-text p + p { margin-top: 1.2rem; }
+
+    /* STATS ROW */
+    .stats {
+      display: flex;
+      gap: 4rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-num {
+      font-family: var(--font-serif);
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.4rem;
+    }
+
+    /* NAV ARROWS */
+    .page-nav {
+      position: fixed;
+      bottom: 3rem;
+      right: 4rem;
+      display: flex;
+      gap: 1rem;
+      z-index: 100;
+    }
+
+    .nav-btn {
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: transparent;
+      color: var(--text);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .nav-btn:hover { background: rgba(255,255,255,0.08); }
+    .nav-btn.next { background: #ffffff; border-color: #ffffff; color: #000; }
+    .nav-btn.next:hover { transform: scale(1.1); }
+
+    .nav-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+    @media (max-width: 768px) {
+      header { padding: 1.5rem 2rem; }
+      nav { gap: 1.5rem; }
+      .page { padding: 10rem 6vw 6rem; }
+      .bio-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-row { flex-direction: column-reverse; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <a href="index.html" class="logo">DALA / DEV</a>
+      <div class="brand-tag">SYSTEM ARCHITECTURE & CLOUD INFRASTRUCTURE</div>
+    </div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html" class="active">About</a>
+      <a href="experience.html">Experience</a>
+      <a href="projects.html">Projects</a>
+      <a href="skills.html">Skills</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <div class="page">
+
+    <div class="hero-row">
+      <div class="hero-text">
+        <p class="subtitle">Background & Story</p>
+        <h1>BUILT ON<br>CLOUD &<br><em>CODE</em></h1>
+      </div>
+
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="bio-grid">
+      <div>
+        <p class="bio-label">Who I Am</p>
+        <div class="stats">
+          <div>
+            <div class="stat-num">4+</div>
+            <div class="stat-label">Years Building</div>
+          </div>
+          <div>
+            <div class="stat-num">AWS</div>
+            <div class="stat-label">Certified Architect</div>
+          </div>
+          <div>
+            <div class="stat-num">24/7</div>
+            <div class="stat-label">Operational Vigilance</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p class="bio-label">My Story</p>
+        <div class="bio-text">
+          <p>I'm Dala Erick Otieno — an AWS Certified Solutions Architect and Lead Infrastructure Engineer based in Nairobi, Kenya. My career sits at the intersection of cloud-native architecture and full-stack development.</p>
+          <p>Currently I spearhead platform stability and the complete API lifecycle for Fagi Errands, managing a multi-app ecosystem with 24/7 operational vigilance — from nightly security hardening to zero-downtime deployments on both Google Play and the App Store.</p>
+          <p>My stack spans React, Node.js, Python, Terraform, Docker, and the full AWS suite. I bridge the gap between robust backend engineering and secure, automated deployments — because good infrastructure should be invisible.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="page-nav">
+    <a href="index.html" class="nav-btn" aria-label="Previous">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
+    <a href="experience.html" class="nav-btn next" aria-label="Next">
+      <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+    </a>
+  </div>
+
+</body>
+</html>

@@ -15,19 +15,29 @@
     :root {
       --font-serif: 'Playfair Display', Georgia, serif;
       --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-      --accent-orange: #d97736;
+      --accent-orange: #ffffff;
       --text-white: #ffffff;
-      --text-muted: rgba(255, 255, 255, 0.6);
+      --text-muted: rgba(255, 255, 255, 0.5);
+      --bg: #1a1a1f;
+      --surface: #222228;
+      --border: rgba(255,255,255,0.08);
     }
 
     body {
       font-family: var(--font-sans);
-      background-color: #070707;
+      background-color: var(--bg);
       color: var(--text-white);
-      overflow: hidden;
-      height: 100vh;
+      overflow-x: hidden;
       width: 100vw;
-      perspective: 1200px; /* Enables 3D camera depth */
+      perspective: 1200px;
+    }
+
+    /* --- HERO WRAPPER --- */
+    .hero-wrapper {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
     }
 
     /* --- BACKGROUND SLIDER & ZOOM ANIMATIONS --- */
@@ -90,7 +100,7 @@
     .overlay {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.85) 100%);
+      background: radial-gradient(circle at center, rgba(26,26,31,0.1) 0%, rgba(26,26,31,0.88) 100%);
       z-index: 2;
       pointer-events: none;
     }
@@ -224,11 +234,11 @@
     }
 
     .badge {
-      color: var(--accent-orange);
+      color: var(--text-white);
       font-size: 0.85rem;
       font-weight: 600;
       text-transform: lowercase;
-      border-bottom: 1px solid var(--accent-orange);
+      border-bottom: 1px solid rgba(255,255,255,0.4);
       padding-bottom: 2px;
       margin-bottom: 1.2rem;
       opacity: 0;
@@ -261,7 +271,149 @@
       }
     }
 
-    /* --- FOOTER & ACTION BUTTONS --- */
+    /* --- STATS BAR --- */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin: 0 4rem 5rem;
+      overflow: hidden;
+    }
+
+    .stat-item {
+      padding: 2.5rem 2rem;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-icon { font-size: 1.4rem; margin-bottom: 0.3rem; opacity: 0.6; }
+
+    .stat-num {
+      font-family: var(--font-serif);
+      font-size: 2.8rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* --- FEATURED WORK --- */
+    .featured {
+      padding: 0 4rem 6rem;
+    }
+
+    .featured-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .featured-header h2 {
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .featured-header a {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.3s;
+    }
+
+    .featured-header a:hover { color: var(--text-white); }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 4/3;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .card:hover { transform: translateY(-4px); }
+
+    .card-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover .card-bg { opacity: 0.65; }
+
+    .card-body {
+      position: absolute;
+      inset: 0;
+      padding: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: linear-gradient(to top, rgba(26,26,31,0.95) 0%, transparent 60%);
+    }
+
+    .card-tag {
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .card-title {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .card-arrow {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.2rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
+    }
+
+    .card:hover .card-arrow { background: #fff; }
+    .card:hover .card-arrow svg { fill: #000; }
+    .card-arrow svg { width: 14px; height: 14px; fill: #fff; }
     .corner-info {
       position: absolute;
       bottom: 3rem;
@@ -287,14 +439,14 @@
       width: 55px;
       height: 55px;
       border-radius: 50%;
-      background: var(--accent-orange);
+      background: #ffffff;
       border: none;
       color: #000;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 10px 25px rgba(217, 119, 54, 0.3);
+      box-shadow: 0 10px 25px rgba(255,255,255,0.1);
       transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
@@ -312,11 +464,13 @@
 </head>
 <body>
 
+  <div class="hero-wrapper">
+
   <!-- Background Image Slides -->
   <div class="bg-slider">
-    <div class="bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1920&q=80');"></div>
-    <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=80');"></div>
-    <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1920&q=80');"></div>
+    <div class="bg-slide" style="background-image: url('https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=1920&q=80');"></div>
   </div>
   
   <div class="overlay"></div>
@@ -324,13 +478,16 @@
   <!-- Header -->
   <header>
     <div class="brand">
-      <div class="logo">ALEX / DEV</div>
-      <div class="brand-tag">FULL-STACK ENGINEER & CREATIVE DEVELOPER</div>
+      <div class="logo">DALA / DEV</div>
+      <div class="brand-tag">SYSTEM ARCHITECTURE & CLOUD INFRASTRUCTURE</div>
     </div>
     <nav>
       <a class="nav-link active" onclick="handleNavClick(0)">Home</a>
-      <a class="nav-link" onclick="handleNavClick(1)">Experience</a>
-      <a class="nav-link" onclick="handleNavClick(2)">About</a>
+      <a class="nav-link" href="about.html">About</a>
+      <a class="nav-link" href="experience.html">Experience</a>
+      <a class="nav-link" href="projects.html">Projects</a>
+      <a class="nav-link" href="skills.html">Skills</a>
+      <a class="nav-link" href="contact.html">Contact</a>
     </nav>
   </header>
 
@@ -339,13 +496,13 @@
     <!-- Slide 1: Intro -->
     <div class="section-content active">
       <div class="text-mask">
-        <p class="subtitle">CREATIVE VISION</p>
+        <p class="subtitle">AWS CERTIFIED SOLUTIONS ARCHITECT</p>
       </div>
       <div class="main-title-container">
         <div class="text-mask">
-          <h1 class="main-title">THE ART<br>OF CODE</h1>
+          <h1 class="main-title">THE ART<br>OF CLOUD</h1>
         </div>
-        <span class="badge">digital experiences</span>
+        <span class="badge">infrastructure & code</span>
       </div>
     </div>
 
@@ -359,8 +516,7 @@
           <h1 class="main-title">BUILDING<br>SYSTEMS</h1>
         </div>
         <span class="badge">full-stack mastery</span>
-      </div>
-    </div>
+      </div>    </div>
 
     <!-- Slide 3: About -->
     <div class="section-content">
@@ -379,7 +535,7 @@
   <!-- Corner Details -->
   <div class="corner-info">
     <strong>AVAILABLE FOR FREELANCE & FULL-TIME</strong>
-    NEW YORK, NY / REMOTE WORLDWIDE
+    NAIROBI, KENYA / REMOTE WORLDWIDE
   </div>
 
   <!-- Animated Circular Arrow Button -->
@@ -388,6 +544,72 @@
       <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
     </svg>
   </button>
+
+  </div><!-- end .hero-wrapper -->
+
+  <!-- ===== BELOW HERO ===== -->
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-icon">✦</div>
+      <div class="stat-num">4+</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">◈</div>
+      <div class="stat-num">10+</div>
+      <div class="stat-label">Projects Shipped</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">◎</div>
+      <div class="stat-num">AWS</div>
+      <div class="stat-label">Certified Architect</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">⊕</div>
+      <div class="stat-num">24/7</div>
+      <div class="stat-label">Operational Vigilance</div>
+    </div>
+  </div>
+
+  <!-- Featured Work -->
+  <div class="featured">
+    <div class="featured-header">
+      <h2>Featured Work</h2>
+      <a href="projects.html">Explore All Projects →</a>
+    </div>
+    <div class="cards">
+
+      <div class="card" onclick="window.open('https://nexuss-1hsa.onrender.com/','_blank')">
+        <div class="card-bg" style="background-image:url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80')"></div>
+        <div class="card-body">
+          <div class="card-tag">Full-Stack · Cloud</div>
+          <div class="card-title">NexusFlow</div>
+        </div>
+        <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+      </div>
+
+      <div class="card" onclick="window.open('https://flavorfind-fp0l.onrender.com/','_blank')">
+        <div class="card-bg" style="background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80')"></div>
+        <div class="card-body">
+          <div class="card-tag">Mobile · AI Integration</div>
+          <div class="card-title">FlavorFind</div>
+        </div>
+        <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+      </div>
+
+      <div class="card" onclick="window.open('https://bluetechnology-com.onrender.com/','_blank')">
+        <div class="card-bg" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80')"></div>
+        <div class="card-body">
+          <div class="card-tag">E-Commerce · Serverless</div>
+          <div class="card-title">BlueTechnology</div>
+        </div>
+        <div class="card-arrow"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+      </div>
+
+    </div>
+  </div>
 
   <script>
     let currentIndex = 0;
@@ -421,9 +643,9 @@
       const nextSlideEl = slides[nextIndex];
       const nextContent = contents[nextIndex];
 
-      // Update Nav active indicator
-      navLinks[currentIndex].classList.remove('active');
-      navLinks[nextIndex].classList.add('active');
+      // Update Nav active indicator — only index 0 maps to Home
+      navLinks.forEach(l => l.classList.remove('active'));
+      if (nextIndex === 0) navLinks[0].classList.add('active');
 
       // Trigger exit zoom animation on current image
       currentSlide.classList.remove('active');
@@ -446,8 +668,11 @@
     }
 
     function nextSlide() {
-      let next = (currentIndex + 1) % slides.length;
-      switchSlide(next);
+      if (currentIndex === slides.length - 1) {
+        window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+        return;
+      }
+      switchSlide(currentIndex + 1);
     }
 
     function prevSlide() {
@@ -465,26 +690,30 @@
       resetAutoSlide();
     }
 
-    /* --- HORIZONTAL SCROLL INTERCEPTION --- */
+    /* --- SCROLL INTERCEPTION --- */
     let lastScrollTime = 0;
 
     window.addEventListener('wheel', (e) => {
+      // Only intercept slides when user hasn't scrolled past the hero
+      if (window.scrollY > 10) return;
       const now = Date.now();
-      // Debounce scroll events (minimum 600ms threshold)
       if (now - lastScrollTime < 600 || isAnimating) return;
+      lastScrollTime = now;
 
       if (e.deltaY > 0) {
-        // Scroll Down -> Advance forward (Right to Left transition)
+        if (currentIndex === slides.length - 1) {
+          // last slide — let page scroll down naturally
+          return;
+        }
         nextSlide();
         resetAutoSlide();
-        lastScrollTime = now;
+        e.preventDefault();
       } else if (e.deltaY < 0) {
-        // Scroll Up -> Move backward
         prevSlide();
         resetAutoSlide();
-        lastScrollTime = now;
+        e.preventDefault();
       }
-    }, { passive: true });
+    }, { passive: false });
   </script>
 </body>
 </html>
