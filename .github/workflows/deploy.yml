@@ -1,22 +1,27 @@
-name: Deploy to DigitalOcean Droplet
+name: Deploy to cPanel
 
 on:
   push:
-    branches:
-      - main  # or master
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Execute SSH commands on Droplet
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy via FTP to cPanel
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd /var/www/portfolio.dallah.co.ke
-            git pull origin main
-            systemctl reload nginx
+          server: rs8.rcnoc.com
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: /portfolio.dallah.co.ke/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/README.md
+            **/_redirects
